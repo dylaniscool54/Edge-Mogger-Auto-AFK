@@ -26,13 +26,33 @@ def holdE():  # Auto Ledge
         time.sleep(5)
         pydirectinput.keyUp('e')
 
-
-threading.Thread(target=holdE).start()
-
 print("Please press the 'L' key when the mouse is below the ledge limit")
 keyboard.wait('L')
 current_x, current_y = pyautogui.position()
 
+print("Please press the 'B' key when the mouse is on the Upgrade Base")
+keyboard.wait('B')
+baseup_x, baseup_y = pyautogui.position()
+
+print("Please press the 'M' key when the mouse is on the Upgrade Multiplier")
+keyboard.wait('M')
+mulup_x, mulup_y = pyautogui.position()
+
+print("Config done")
+threading.Thread(target=holdE).start()
+
+
+def autoupgrade():
+    while True:
+        pyautogui.moveTo(baseup_x, baseup_y)
+        pyautogui.click()
+        time.sleep(1)
+        pyautogui.moveTo(mulup_x, mulup_y)
+        pyautogui.click()
+        print("Upgraded")
+        time.sleep(60) #1 minute before try upgrade
+
+threading.Thread(target=autoupgrade).start()
 
 def is_pixel_color(x, y, expected_color):
     pixel_color = pyautogui.pixel(x, y)
@@ -105,4 +125,5 @@ while True:
     except Exception as e:
         print(f"Error: {e}")
 
-    time.sleep(30) #time to take screenshots
+    time.sleep(10)
+
