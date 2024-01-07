@@ -1,6 +1,7 @@
 # ImgBB API Key (replace with your own key)
-IMGBB_API_KEY = "" #https://api.imgbb.com/
-DISCORDWEBHOOK = "" #A discordwebhook
+IMGBB_API_KEY = ""
+DISCORDWEBHOOK = ""
+autoUpgrade = True
 # used for monitoring your screen while afk
 
 
@@ -29,30 +30,36 @@ def holdE():  # Auto Ledge
 print("Please press the 'L' key when the mouse is below the ledge limit")
 keyboard.wait('L')
 current_x, current_y = pyautogui.position()
+time.sleep(0.1)
 
-print("Please press the 'B' key when the mouse is on the Upgrade Base")
-keyboard.wait('B')
-baseup_x, baseup_y = pyautogui.position()
+if autoUpgrade == True:
+    print("Please press the 'B' key when the mouse is on the Upgrade Base")
+    keyboard.wait('B')
+    baseup_x, baseup_y = pyautogui.position()
 
-print("Please press the 'M' key when the mouse is on the Upgrade Multiplier")
-keyboard.wait('M')
-mulup_x, mulup_y = pyautogui.position()
+    print("Please press the 'M' key when the mouse is on the Upgrade Multiplier")
+    keyboard.wait('M')
+    mulup_x, mulup_y = pyautogui.position()
+
+    def autoupgrade():
+        while True:
+            pyautogui.moveTo(baseup_x, baseup_y)
+            time.sleep(1)
+            pyautogui.click()
+            time.sleep(1)
+            pyautogui.moveTo(mulup_x, mulup_y)
+            time.sleep(1)
+            pyautogui.click()
+            print("Upgraded")
+            time.sleep(10)
+
+    threading.Thread(target=autoupgrade).start()
 
 print("Config done")
 threading.Thread(target=holdE).start()
 
 
-def autoupgrade():
-    while True:
-        pyautogui.moveTo(baseup_x, baseup_y)
-        pyautogui.click()
-        time.sleep(1)
-        pyautogui.moveTo(mulup_x, mulup_y)
-        pyautogui.click()
-        print("Upgraded")
-        time.sleep(60) #1 minute before try upgrade
 
-threading.Thread(target=autoupgrade).start()
 
 def is_pixel_color(x, y, expected_color):
     pixel_color = pyautogui.pixel(x, y)
@@ -111,7 +118,6 @@ def reportscreen(screenshot, discord_webhook, imgbb_api_key):
         print("Screenshot sent successfully to Discord webhook.")
 
 
-
 while True:
     try:
         start_time = time.time()
@@ -123,4 +129,3 @@ while True:
         print(f"Error: {e}")
 
     time.sleep(10)
-
