@@ -18,7 +18,7 @@ if DISCORDWEBHOOK == "":
     print("Discord Webhook is not setup you will not be able to monitor your screen")
     takeshots = False
 else:
-    if GLITCHPROJECT == "":
+    if GLITCHPROJECT == "https://PROJECTNAME.glitch.me/":
         print("You need a glitch project to upload the images to for discord")
         takeshots = False
 
