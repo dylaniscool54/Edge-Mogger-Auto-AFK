@@ -111,7 +111,7 @@ def setnodeimg(image):
 def reportscreen(screenshot, discord_webhook):
     image_byte_array = BytesIO()
     screenshot.save(image_byte_array, format='PNG')
-    upload_to_imgbb(image_byte_array)
+    setnodeimg(image_byte_array)
     image_url = GLITCHPROJECT + "currentimg?a=" + str(uuid.uuid4())
     if image_url:
         payload = {"content": "Screenshot", "embeds": [{"image": {"url": image_url}}]}
