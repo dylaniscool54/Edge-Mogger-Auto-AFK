@@ -1,13 +1,26 @@
-# ImgBB API Key (replace with your own key)
-IMGBB_API_KEY = ""
 DISCORDWEBHOOK = ""
-autoUpgrade = True
+GLITCHPROJECT = "https://PROJECTNAME.glitch.me/"
+#please remix project: https://glitch.com/edit/#!/remix/edgemogger
+#replace PROJECTNAME with the project u created and remember create an account or your project will expire in 3 days
+
+#dont share your glitch project or discord webhook
+autoUpgrade = False
 # used for monitoring your screen while afk
 
 
 # code below, edit if needed
+takeshots = True
+if DISCORDWEBHOOK == "":
+    print("Discord Webhook is not setup you will not be able to monitor your screen")
+    takeshots = False
+else:
+    if GLITCHPROJECT == "":
+        print("You need a glitch project to upload the images to for discord")
+        takeshots = False
+
 print("This program lets you grind edge moggers while AFK")
 print("Make sure auto hatch is on for hatching")
+print("Turn on Auto Ledge")
 print("Loading")
 import pydirectinput
 import time
@@ -18,14 +31,9 @@ import requests
 from io import BytesIO
 from PIL import Image
 import base64
+import uuid
 print("Loaded")
 
-def holdE():  # Auto Ledge
-    print("E is being held down")
-    while True:
-        pydirectinput.keyDown('e')
-        time.sleep(5)
-        pydirectinput.keyUp('e')
 
 print("Please press the 'L' key when the mouse is below the ledge limit")
 keyboard.wait('L')
@@ -43,22 +51,19 @@ if autoUpgrade == True:
 
     def autoupgrade():
         while True:
-            pyautogui.moveTo(baseup_x, baseup_y)
+            pydirectinput.moveTo(baseup_x, baseup_y)
             time.sleep(1)
-            pyautogui.click()
+            pydirectinput.click()
             time.sleep(1)
-            pyautogui.moveTo(mulup_x, mulup_y)
+            pydirectinput.moveTo(mulup_x, mulup_y)
             time.sleep(1)
-            pyautogui.click()
+            pydirectinput.click()
             print("Upgraded")
-            time.sleep(10)
+            time.sleep(2)
 
     threading.Thread(target=autoupgrade).start()
 
 print("Config done")
-threading.Thread(target=holdE).start()
-
-
 
 
 def is_pixel_color(x, y, expected_color):
@@ -76,6 +81,7 @@ def autoedge():  # Auto Edge Thing (OP)
         while not is_pixel_color(current_x, current_y, expected_color):
             if time.time() - start_time > timeout:
                 print("Timeout reached. Edge never reached")
+                pydirectinput.press('x')
                 break
         pydirectinput.press('x')
         print("Edged!")
@@ -90,42 +96,33 @@ def take_screenshot():
     return screenshot
 
 
-def upload_to_imgbb(api_key, image):
-    url = "https://api.imgbb.com/1/upload"
+def setnodeimg(image):
     image_base64 = base64.b64encode(image.getvalue()).decode('utf-8')
-    payload = {
-        "key": api_key,
+    data = {
         "image": image_base64
     }
-    response = requests.post(url, payload)
-    data = response.json()
-    if response.status_code == 200 and data['data']['url']:
-        print("Image uploaded to ImgBB successfully.")
-        return data['data']['url']
-    else:
-        print(f"Failed to upload image to ImgBB. Status code: {response.status_code}")
-        return None
+    response = requests.post(GLITCHPROJECT + "updateimg", json=data)
+    
 
-
-def reportscreen(screenshot, discord_webhook, imgbb_api_key):
+def reportscreen(screenshot, discord_webhook):
     image_byte_array = BytesIO()
     screenshot.save(image_byte_array, format='PNG')
-    image_url = upload_to_imgbb(imgbb_api_key, image_byte_array)
-
+    upload_to_imgbb(image_byte_array)
+    image_url = GLITCHPROJECT + "currentimg?a=" + str(uuid.uuid4())
     if image_url:
         payload = {"content": "Screenshot", "embeds": [{"image": {"url": image_url}}]}
         response = requests.post(discord_webhook, json=payload)
         print("Screenshot sent successfully to Discord webhook.")
 
+if takeshots:
+    while True:
+        try:
+            start_time = time.time()
+            screenshot = take_screenshot()
+            reportscreen(screenshot, DISCORDWEBHOOK)
+            elapsed_time = time.time() - start_time
+            print(f"Report sent in {elapsed_time} seconds.")
+        except Exception as e:
+            print(f"Error: {e}")
 
-while True:
-    try:
-        start_time = time.time()
-        screenshot = take_screenshot()
-        reportscreen(screenshot, DISCORDWEBHOOK, IMGBB_API_KEY)
-        elapsed_time = time.time() - start_time
-        print(f"Report sent in {elapsed_time} seconds.")
-    except Exception as e:
-        print(f"Error: {e}")
-
-    time.sleep(10)
+        time.sleep(5)
