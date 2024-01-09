@@ -1,10 +1,14 @@
+#Settings
 DISCORDWEBHOOK = ""
 GLITCHPROJECT = "https://PROJECTNAME.glitch.me/"
+autoUpgrade = False
+#End Settings
+
 #please remix project: https://glitch.com/edit/#!/remix/edgemogger
 #replace PROJECTNAME with the project u created and remember create an account or your project will expire in 3 days
 
 #dont share your glitch project or discord webhook
-autoUpgrade = False
+
 # used for monitoring your screen while afk
 
 
