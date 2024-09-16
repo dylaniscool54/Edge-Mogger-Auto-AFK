@@ -7,3 +7,7 @@ Monitor screen using img bb and discord webhook, so if something goes wrong u ca
 Anti AFK kick
 
 This lets u play edge moggers automatically 24/7 if u leave an old laptop on doing it or something
+
+use in the game
+
+https://www.roblox.com/games/15402727826/Ledge-Mogger
